@@ -25,6 +25,7 @@ const Day: FC<Props> = observer(({ data }) => {
         disabled={!data.status.isAvailableToSelect}
         aria-disabled={!data.status.isAvailableToSelect}
         aria-live='polite'
+        aria-label={data.label}
         tabIndex={data.status.isAvailableToSelect ? 1 : -1}
         css={[
           tw`grid content-center justify-items-center h-10 w-full font-medium ring-0 my-1`,
@@ -32,6 +33,7 @@ const Day: FC<Props> = observer(({ data }) => {
           tw`active:ring-0`,
           data.style,
         ]}
+        data-cy={data.testId}
       >
         {data.dayOfMonth}
       </button>

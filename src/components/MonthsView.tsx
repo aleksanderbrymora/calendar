@@ -75,6 +75,9 @@ const Arrow: FC<ArrowProps> = ({ variant, changeMonth, disabled }) => {
       css={[tw`w-10 h-10`, disabled && tw`opacity-10 cursor-not-allowed`]}
       onClick={changeMonth}
       disabled={disabled}
+      tabIndex={disabled ? -1 : 1}
+      aria-disabled={disabled}
+      data-cy={`${variant === 'left' ? 'previous' : 'next'}-month-button`}
     >
       {variant === 'right' ? (
         <svg
@@ -117,6 +120,5 @@ export default MonthsView;
 TODO
 
 * Keyboard shortcuts
-* Minimum stay optional
 * Inputs on top for the date written by keyboard in a certain format
 */

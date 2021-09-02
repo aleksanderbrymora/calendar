@@ -75,6 +75,7 @@ export const Day = types
     },
   }))
   .views((self) => ({
+    /** Used to display a number on a month view */
     get dayOfMonth(): number {
       return self.date.getDate();
     },
@@ -147,6 +148,10 @@ export const Day = types
         self.date,
         addMonths(new Date(), offset + (side === 'left' ? 0 : 1)),
       );
+    },
+    get testId(): string {
+      const formattedDate = format(self.date, 'd/L/y');
+      return `calendar-day-${formattedDate}`;
     },
   }))
   .views((self) => ({
@@ -259,6 +264,40 @@ export const Day = types
   .views((self) => ({
     get style() {
       return getStyle(self.status.variant);
+    },
+    /** Used for aria-label when displaying a day */
+    get label(): string {
+      // Selected start date. Tuesday, December 7, 2021
+      const formattedDate = format(self.date, 'EEEE, LLLL d, y');
+      const { minStay, selectState } = getParent<typeof Calendar>(self, 3);
+
+      switch (self.status.variant) {
+        case StatusVariant.selectedAsStart:
+          return `Selected for check-in. ${formattedDate}`;
+        case StatusVariant.selectedAsEnd:
+          return `Selected for check-out. ${formattedDate}`;
+        case StatusVariant.available:
+          switch (selectState) {
+            case SelectState.startNotSelected:
+              return `Choose ${formattedDate} as your check-in date. It's available, and has ${minStay} night minimum stay requirement`;
+            case SelectState.startSelected:
+              return `Choose ${formattedDate} as your check-out date. It's available`;
+            case SelectState.endSelected:
+              return `Choose ${formattedDate} as your check-in date. It's available, and has ${minStay} night minimum stay requirement`;
+            default:
+              return 'Something went really wrong';
+              break;
+          }
+        case StatusVariant.checkoutOnly:
+          return `${formattedDate} is only available for check out.`;
+        // Friday, October 15, 2021 is available, but has no eligible check out date, due to the 2 night stay requirement.
+        case StatusVariant.nMinNights:
+          return `${formattedDate} is available, but has no eligible check out date, due to the ${minStay} night stay requirement.`;
+        case StatusVariant.selectedBetween:
+          return `Choose ${formattedDate} as your check-in date. It's available, and has ${minStay} night minimum stay requirement`;
+        case StatusVariant.unavailable:
+          return `Not available ${formattedDate}`;
+      }
     },
   }));
 
@@ -502,10 +541,10 @@ const calendar = Calendar.create({
     new Date(2021, 8, 19),
     new Date(2021, 8, 20),
     new Date(2021, 8, 21),
-    new Date(2021, 8, 2),
-    new Date(2021, 8, 3),
     new Date(2021, 8, 4),
     new Date(2021, 8, 5),
+    new Date(2021, 8, 6),
+    new Date(2021, 8, 7),
   ],
 });
 calendar.createMonths();
