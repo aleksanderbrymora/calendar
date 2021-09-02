@@ -41,7 +41,7 @@ const Calendar = () => {
   const calendarGrid = css`
     grid-template-rows: auto 380px auto;
   `;
-  const styles = tw`max-w-3xl p-5 grid rounded-xl shadow-2xl mx-auto bg-white`;
+  const styles = tw`max-w-3xl py-5 px-7 grid rounded-xl shadow-2xl mx-auto bg-white mt-8`;
 
   return state.isOpen ? (
     <OverlayContainer>

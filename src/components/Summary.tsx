@@ -1,3 +1,4 @@
+import { useFocus, usePress } from '@react-aria/interactions';
 import { format, parse } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent, FC, FormEvent, useCallback, useEffect } from 'react';
@@ -12,7 +13,7 @@ const Summary = observer(() => {
   return (
     <div tw='grid grid-cols-3 my-2'>
       <div tw='mr-5'>
-        <h1 tw='text-3xl font-bold'>
+        <h1 tw='text-3xl font-bold' tabIndex={-1}>
           {amountOfNights === 0 ? 'Select dates' : `${amountOfNights} nights`}
         </h1>
         <h2 tw='whitespace-nowrap text-sm'>{infoText}</h2>
@@ -117,6 +118,9 @@ const DateInput: FC<DateInputProps> = observer(
       });
     };
 
+    const { focusProps } = useFocus({ onFocus, onBlur });
+    const { pressProps } = usePress({ onPress: reset });
+
     return (
       <div
         css={[
@@ -134,8 +138,7 @@ const DateInput: FC<DateInputProps> = observer(
                 {type === 'checkIn' ? 'CHECK-IN' : 'CHECKOUT'}
               </label>
               <input
-                onBlur={onBlur}
-                onFocus={onFocus}
+                {...focusProps}
                 onChange={onChange}
                 value={state.input}
                 type='text'
@@ -145,19 +148,21 @@ const DateInput: FC<DateInputProps> = observer(
               />
             </form>
           </div>
-          <button onClick={reset} tw='w-10 h-10 text-center p-2'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-2 w-2'
-              viewBox='0 0 20 20'
-            >
-              <path
-                fillRule='evenodd'
-                d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
-                clipRule='evenodd'
-              />
-            </svg>
-          </button>
+          {(type === 'checkIn' ? startDate : endDate) && (
+            <button {...pressProps} tw='w-10 h-10 text-center p-2'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-2 w-2'
+                viewBox='0 0 20 20'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+                  clipRule='evenodd'
+                />
+              </svg>
+            </button>
+          )}
         </div>
         {!state.isValid && state.shouldShowInvalid && (
           <small tw='text-red-500'>This date is unavailable</small>

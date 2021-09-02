@@ -17,7 +17,7 @@ const BottomControls: FC<Props> = observer(({ btnProps, btnRef }) => {
 
   return (
     <div tw='flex flex-row justify-between '>
-      <button>Kb info</button>
+      <button aria-label='Open keyboard shortcuts panel'>Kb info</button>
       <div tw='grid grid-cols-2 gap-3'>
         <button {...resetPressProps} tw='underline font-semibold p-1'>
           Clear Dates
