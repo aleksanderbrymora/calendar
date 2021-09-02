@@ -1,3 +1,4 @@
+import { usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
 import { FC } from 'react';
@@ -70,11 +71,15 @@ interface ArrowProps {
 }
 
 const Arrow: FC<ArrowProps> = ({ variant, changeMonth, disabled }) => {
+  const { pressProps } = usePress({
+    onPress: changeMonth,
+    isDisabled: disabled,
+  });
+
   return (
     <button
       css={[tw`w-10 h-10`, disabled && tw`opacity-10 cursor-not-allowed`]}
-      onClick={changeMonth}
-      disabled={disabled}
+      {...pressProps}
       tabIndex={disabled ? -1 : 1}
       aria-disabled={disabled}
       data-cy={`${variant === 'left' ? 'previous' : 'next'}-month-button`}

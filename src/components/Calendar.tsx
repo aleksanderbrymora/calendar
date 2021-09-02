@@ -2,20 +2,71 @@ import MonthsView from './MonthsView';
 import tw, { css } from 'twin.macro';
 import Summary from './Summary';
 import BottomControls from './BottomControls';
+import { useRef, useState } from 'react';
+import {
+  OverlayContainer,
+  useModal,
+  useOverlay,
+  usePreventScroll,
+} from '@react-aria/overlays';
+import { FocusScope } from '@react-aria/focus';
+import { useOverlayTriggerState } from '@react-stately/overlays';
+import { useButton } from '@react-aria/button';
 
 const Calendar = () => {
+  // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const underlayRef = useRef<HTMLDivElement>(null);
+  const { overlayProps, underlayProps } = useOverlay({}, underlayRef);
+  const { modalProps } = useModal();
+  const state = useOverlayTriggerState({});
+  const openButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const { buttonProps: openButtonProps } = useButton(
+    {
+      onPress: state.open,
+    },
+    openButtonRef,
+  );
+
+  const { buttonProps: closeButtonProps } = useButton(
+    {
+      onPress: state.close,
+    },
+    closeButtonRef,
+  );
+
+  usePreventScroll();
+
   const calendarGrid = css`
     grid-template-rows: auto 380px auto;
   `;
+  const styles = tw`max-w-3xl p-5 grid rounded-xl shadow-2xl mx-auto bg-white`;
 
-  const styles = tw`max-w-3xl p-5 grid rounded-xl shadow-2xl mx-auto`;
-
-  return (
-    <div css={[styles, calendarGrid]}>
-      <Summary />
-      <MonthsView />
-      <BottomControls />
-    </div>
+  return state.isOpen ? (
+    <OverlayContainer>
+      <div tw='inset-0 z-50 fixed bg-black bg-opacity-10' {...underlayProps}>
+        <FocusScope contain restoreFocus autoFocus>
+          <div
+            css={[styles, calendarGrid]}
+            ref={underlayRef}
+            {...overlayProps}
+            {...modalProps}
+          >
+            <Summary />
+            <MonthsView />
+            <BottomControls
+              btnProps={closeButtonProps}
+              btnRef={closeButtonRef}
+            />
+          </div>
+        </FocusScope>
+      </div>
+    </OverlayContainer>
+  ) : (
+    <button {...openButtonProps} ref={openButtonRef}>
+      Make a reservation
+    </button>
   );
 };
 

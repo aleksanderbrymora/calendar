@@ -1,10 +1,13 @@
+import { OverlayProvider } from '@react-aria/overlays';
 import 'twin.macro';
 import Calendar from './components/Calendar';
 
 const App = () => {
   return (
     <div className='App'>
-      <Calendar />
+      <OverlayProvider>
+        <Calendar />
+      </OverlayProvider>
     </div>
   );
 };

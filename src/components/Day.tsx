@@ -1,6 +1,7 @@
+import { useHover, usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import tw from 'twin.macro';
 import { Day as DayOfWeek } from '../store';
 
@@ -11,17 +12,16 @@ interface Props {
 const tooltipStyles = tw`invisible absolute p-1 rounded border border-gray-200 bg-gray-100 shadow-lg ml-4 text-sm`;
 
 const Day: FC<Props> = observer(({ data }) => {
-  const [hasHover, setHasHover] = useState(false);
-
-  const onHover = () => setHasHover(true);
-  const onLeave = () => setHasHover(false);
+  const { pressProps: selectPressProps } = usePress({
+    onPress: data.select,
+  });
+  const { isHovered, hoverProps } = useHover({});
 
   return data.belongsToDisplayedMonth ? (
     <div>
       <button
-        onMouseEnter={onHover}
-        onMouseLeave={onLeave}
-        onClick={data.select}
+        {...selectPressProps}
+        {...hoverProps}
         disabled={!data.status.isAvailableToSelect}
         aria-disabled={!data.status.isAvailableToSelect}
         aria-live='polite'
@@ -38,7 +38,7 @@ const Day: FC<Props> = observer(({ data }) => {
         {data.dayOfMonth}
       </button>
       {data.status.reason && (
-        <small css={[tooltipStyles, hasHover ? tw`visible` : tw`invisible`]}>
+        <small css={[tooltipStyles, isHovered ? tw`visible` : tw`invisible`]}>
           {data.status.reason}
         </small>
       )}
