@@ -61,6 +61,7 @@ export const Day = types
     id: types.optional(types.identifier, nanoid),
     date: types.Date,
     reserved: types.optional(types.boolean, false),
+    isFocusable: types.optional(types.boolean, true),
   })
   /** DEV-only Actions */
   .actions((self) => ({
@@ -72,6 +73,16 @@ export const Day = types
     select() {
       const { select } = getParent<typeof Calendar>(self, 3);
       select(self.id);
+    },
+    changeOtherDaysToNotFocusable() {
+      const { changeAllButOneDayToFocusable } = getParent<typeof Calendar>(
+        self,
+        3,
+      );
+      changeAllButOneDayToFocusable(self.id);
+    },
+    changeFocusable(to: boolean) {
+      self.isFocusable = to;
     },
   }))
   .views((self) => ({
@@ -407,6 +418,18 @@ export const Calendar = types
       self.left.createDays(addMonths(new Date(), self.offset));
       self.right.createDays(addMonths(new Date(), self.offset + 1));
     },
+    changeAllButOneDayToFocusable(id: string) {
+      self.left.days.forEach((d) =>
+        d.id === id ? d.changeFocusable(true) : d.changeFocusable(false),
+      );
+      self.right.days.forEach((d) =>
+        d.id === id ? d.changeFocusable(true) : d.changeFocusable(false),
+      );
+    },
+    makeAllFocusable() {
+      self.left.days.forEach((d) => d.changeFocusable(true));
+      self.right.days.forEach((d) => d.changeFocusable(true));
+    },
   }))
   .actions((self) => ({
     /** Shifts everything back to initial state */
@@ -414,6 +437,7 @@ export const Calendar = types
       self.startDate = null;
       self.endDate = null;
       self.createMonths();
+      self.makeAllFocusable();
     },
     /**
      * Moves to the next month
@@ -423,10 +447,12 @@ export const Calendar = types
     nextMonth() {
       self.offset++;
       self.createMonths();
+      self.makeAllFocusable();
     },
     previousMonth() {
       self.offset--;
       self.createMonths();
+      self.makeAllFocusable();
     },
     isRangeFree(start: Date, end: Date) {
       const monthsCombined = [...self.left.days, ...self.right.days];
