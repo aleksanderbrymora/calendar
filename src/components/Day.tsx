@@ -1,11 +1,9 @@
 import { useFocus, useHover, usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
-import { useEffect } from 'react';
-import { useRef } from 'react';
 import { FC } from 'react';
 import tw from 'twin.macro';
-import { Day as DayOfWeek } from '../store';
+import { Day as DayOfWeek } from '../store/Day';
 
 interface Props {
   data: Instance<typeof DayOfWeek>;

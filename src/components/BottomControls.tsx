@@ -1,9 +1,9 @@
+import { ButtonAria } from '@react-aria/button';
+import { usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
+import { FC, RefObject } from 'react';
 import 'twin.macro';
 import { useCalendar } from '../store';
-import { usePress } from '@react-aria/interactions';
-import { ButtonAria } from '@react-aria/button';
-import { RefObject, FC } from 'react';
 
 interface Props {
   btnRef: RefObject<HTMLButtonElement>;

@@ -3,7 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
 import { FC } from 'react';
 import tw from 'twin.macro';
-import { useCalendar, Month as MonthStore } from '../store';
+import { useCalendar } from '../store';
+import { Month as MonthStore } from '../store/Month';
 import Day from './Day';
 
 const MonthsView = observer(() => {

@@ -1,5 +1,5 @@
 import tw, { TwStyle } from 'twin.macro';
-import { StatusVariant } from './store';
+import { StatusVariant } from './types';
 
 const unavailable = tw`cursor-default text-gray-400 line-through`;
 const checkoutOnly = tw`text-gray-600 cursor-default`;

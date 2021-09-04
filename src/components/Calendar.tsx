@@ -1,17 +1,17 @@
-import MonthsView from './MonthsView';
-import tw, { css } from 'twin.macro';
-import Summary from './Summary';
-import BottomControls from './BottomControls';
-import { useRef, useState } from 'react';
+import { useButton } from '@react-aria/button';
+import { FocusScope } from '@react-aria/focus';
 import {
   OverlayContainer,
   useModal,
   useOverlay,
-  usePreventScroll,
+  usePreventScroll
 } from '@react-aria/overlays';
-import { FocusScope } from '@react-aria/focus';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { useButton } from '@react-aria/button';
+import { useRef } from 'react';
+import tw, { css } from 'twin.macro';
+import BottomControls from './BottomControls';
+import MonthsView from './MonthsView';
+import Summary from './Summary';
 
 const Calendar = () => {
   // const [isCalendarOpen, setIsCalendarOpen] = useState(false);
