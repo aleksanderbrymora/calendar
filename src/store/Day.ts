@@ -261,7 +261,6 @@ export const Day = types
               return `Choose ${formattedDate} as your check-in date. It's available, and has ${minStay} night minimum stay requirement`;
             default:
               return 'Something went really wrong';
-              break;
           }
         case StatusVariant.checkoutOnly:
           return `${formattedDate} is only available for check out.`;
@@ -272,6 +271,8 @@ export const Day = types
           return `Choose ${formattedDate} as your check-in date. It's available, and has ${minStay} night minimum stay requirement`;
         case StatusVariant.unavailable:
           return `Not available ${formattedDate}`;
+        default:
+          return `Something went really wrong...`;
       }
     },
   }));

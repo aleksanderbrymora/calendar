@@ -4,7 +4,7 @@ import {
   OverlayContainer,
   useModal,
   useOverlay,
-  usePreventScroll
+  usePreventScroll,
 } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { useRef } from 'react';
@@ -23,16 +23,12 @@ const Calendar = () => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const { buttonProps: openButtonProps } = useButton(
-    {
-      onPress: state.open,
-    },
+    { onPress: state.open },
     openButtonRef,
   );
 
   const { buttonProps: closeButtonProps } = useButton(
-    {
-      onPress: state.close,
-    },
+    { onPress: state.close },
     closeButtonRef,
   );
 

@@ -9,6 +9,7 @@ import Day from './Day';
 
 const MonthsView = observer(() => {
   const { left, right } = useCalendar();
+
   return (
     <div tw='grid grid-cols-2 gap-8'>
       <Month month={left} />
