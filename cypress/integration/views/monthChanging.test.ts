@@ -5,6 +5,7 @@ describe('Changing months works as expected', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
     cy.viewport('macbook-16');
+    cy.get('[data-cy="open-calendar-modal"]').click();
   });
 
   it('Changes the month by one when next button is pressed', () => {

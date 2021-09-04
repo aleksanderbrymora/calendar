@@ -1,9 +1,10 @@
-import { useFocus, useHover, usePress } from '@react-aria/interactions';
+import { useHover, usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
 import { FC } from 'react';
 import tw from 'twin.macro';
 import { Day as DayOfWeek } from '../store/Day';
+import { StatusVariant } from '../store/types';
 
 interface Props {
   data: Instance<typeof DayOfWeek>;
@@ -16,21 +17,21 @@ const Day: FC<Props> = observer(({ data }) => {
     onPress: data.select,
   });
   const { isHovered, hoverProps } = useHover({});
-  const { focusProps } = useFocus({
-    onFocus: data.changeOtherDaysToNotFocusable,
-  });
 
   return data.belongsToDisplayedMonth ? (
     <div>
       <button
         {...selectPressProps}
         {...hoverProps}
-        {...focusProps}
         disabled={!data.status.isAvailableToSelect}
         aria-disabled={!data.status.isAvailableToSelect}
         aria-live='polite'
         aria-label={data.label}
-        tabIndex={data.status.isAvailableToSelect && data.isFocusable ? 1 : -1}
+        tabIndex={data.status.isAvailableToSelect ? 1 : -1}
+        data-selected-start={
+          data.status.variant === StatusVariant.selectedAsStart
+        }
+        data-selected-end={data.status.variant === StatusVariant.selectedAsEnd}
         css={[
           tw`grid content-center justify-items-center h-10 w-full font-medium ring-0 my-1`,
           tw`focus:(border-none ring-0)`,

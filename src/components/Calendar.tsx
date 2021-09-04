@@ -60,7 +60,11 @@ const Calendar = () => {
       </div>
     </OverlayContainer>
   ) : (
-    <button {...openButtonProps} ref={openButtonRef}>
+    <button
+      {...openButtonProps}
+      ref={openButtonRef}
+      data-cy='open-calendar-modal'
+    >
       Make a reservation
     </button>
   );

@@ -3,6 +3,7 @@ import {
   differenceInDays,
   differenceInMonths,
   format,
+  isAfter,
   isBefore,
 } from 'date-fns';
 import isSameDay from 'date-fns/isSameDay';
@@ -44,18 +45,6 @@ export const Calendar = types
       self.left.createDays(addMonths(new Date(), self.offset));
       self.right.createDays(addMonths(new Date(), self.offset + 1));
     },
-    changeAllButOneDayToFocusable(id: string) {
-      self.left.days.forEach((d) =>
-        d.id === id ? d.changeFocusable(true) : d.changeFocusable(false),
-      );
-      self.right.days.forEach((d) =>
-        d.id === id ? d.changeFocusable(true) : d.changeFocusable(false),
-      );
-    },
-    makeAllFocusable() {
-      self.left.days.forEach((d) => d.changeFocusable(true));
-      self.right.days.forEach((d) => d.changeFocusable(true));
-    },
   }))
   .actions((self) => ({
     /** Shifts everything back to initial state */
@@ -63,7 +52,6 @@ export const Calendar = types
       self.startDate = null;
       self.endDate = null;
       self.createMonths();
-      self.makeAllFocusable();
     },
     /**
      * Moves to the next month
@@ -73,12 +61,10 @@ export const Calendar = types
     nextMonth() {
       self.offset++;
       self.createMonths();
-      self.makeAllFocusable();
     },
     previousMonth() {
       self.offset--;
       self.createMonths();
-      self.makeAllFocusable();
     },
     isRangeFree(start: Date, end: Date) {
       const monthsCombined = [...self.left.days, ...self.right.days];
@@ -88,7 +74,7 @@ export const Calendar = types
       const endIndex = monthsCombined.findIndex((d) => isSameDay(d.date, end));
 
       for (let i = startIndex; i < endIndex; i++) {
-        if (monthsCombined[i].reserved) return false;
+        if (monthsCombined[i]?.reserved) return false;
       }
 
       return true;
@@ -166,20 +152,51 @@ export const Calendar = types
     },
   }))
   .actions((self) => ({
-    selectByDate(date: Date) {
-      const difference = differenceInMonths(
-        date,
-        addMonths(new Date(), self.offset),
-      );
+    selectByDate(date: Date, what: 'start' | 'end') {
+      const isDateAfterNow = isAfter(date, addMonths(new Date(), self.offset));
+      const isDateInLeftMonth = () =>
+        self.left.days.find((d) => isSameDay(d.date, date));
 
-      self.offset = difference + 1;
-      self.createMonths();
+      const isDateInRightMonth = () =>
+        self.right.days.find((d) => isSameDay(d.date, date));
 
-      const monthsCombined = [...self.left.days, ...self.right.days];
-      const day = monthsCombined.find((d) => isSameDay(d.date, date))!;
+      const scrollToSelectedStart = () => {
+        let day = isDateInLeftMonth();
+        while (!day) {
+          self.offset += isDateAfterNow ? 1 : -1;
+          self.createMonths();
+          day = isDateInLeftMonth();
+        }
+        return day;
+      };
 
-      console.log({ day, difference, date, monthsCombined });
+      const scrollToSelectedEnd = () => {
+        let day = isDateInLeftMonth();
+        if (day) return day;
+        day = isDateInRightMonth();
+        while (!day) {
+          self.offset += isDateAfterNow ? 1 : -1;
+          self.createMonths();
+          day = isDateInRightMonth();
+        }
+        return day;
+      };
 
-      if (day) self.select(day.id);
+      if (what === 'start') {
+        const day = scrollToSelectedStart();
+        const previousSelectedStart = self.startDate;
+        self.startDate = null;
+        day.status.isAvailableToSelect
+          ? (self.startDate = date)
+          : (self.startDate = previousSelectedStart);
+      } else {
+        if (!self.startDate) return;
+        const day = scrollToSelectedEnd();
+        const previousSelectedEnd = self.endDate;
+        self.endDate = null;
+        day.status.isAvailableToSelect && !isSameDay(self.startDate, day.date)
+          ? (self.endDate = day.date)
+          : (self.endDate = previousSelectedEnd);
+      }
     },
   }));

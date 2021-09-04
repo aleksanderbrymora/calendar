@@ -25,7 +25,6 @@ export const Day = types
     id: types.optional(types.identifier, nanoid),
     date: types.Date,
     reserved: types.optional(types.boolean, false),
-    isFocusable: types.optional(types.boolean, true),
   })
   /** DEV-only Actions */
   .actions((self) => ({
@@ -37,16 +36,6 @@ export const Day = types
     select() {
       const { select } = getParent<typeof Calendar>(self, 3);
       select(self.id);
-    },
-    changeOtherDaysToNotFocusable() {
-      const { changeAllButOneDayToFocusable } = getParent<typeof Calendar>(
-        self,
-        3,
-      );
-      changeAllButOneDayToFocusable(self.id);
-    },
-    changeFocusable(to: boolean) {
-      self.isFocusable = to;
     },
   }))
   .views((self) => ({

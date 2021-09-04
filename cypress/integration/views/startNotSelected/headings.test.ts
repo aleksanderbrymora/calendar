@@ -6,6 +6,7 @@ describe('Initial things are rendered as expected', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
     cy.viewport('macbook-16');
+    cy.get('[data-cy="open-calendar-modal"]').click();
   });
 
   it('Contains the correct initial headings', () => {

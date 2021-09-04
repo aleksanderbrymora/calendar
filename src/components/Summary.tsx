@@ -83,13 +83,6 @@ const DateInput: FC<DateInputProps> = observer(
         d.placeholder = 'Select Date';
         d.focusOutline = false;
       });
-      if (state.isValid) {
-        const [d, m, y] = state.input.split('/');
-        // prettier-ignore
-        const selectedDate = [d, m, y.length === 4 ? y.substr(-2) : y].join('/');
-        const result = parse(selectedDate, 'd/M/yy', new Date());
-        selectByDate(result);
-      }
     };
 
     const onChange = useCallback(
@@ -104,7 +97,13 @@ const DateInput: FC<DateInputProps> = observer(
 
     const onSubmit = (e: FormEvent) => {
       e.preventDefault();
-      onBlur();
+      if (state.isValid) {
+        const [d, m, y] = state.input.split('/');
+        // prettier-ignore
+        const selectedDate = [d, m, y.length === 4 ? y.substr(-2) : y].join('/');
+        const result = parse(selectedDate, 'd/M/yy', new Date());
+        selectByDate(result, type === 'checkIn' ? 'start' : 'end');
+      }
     };
 
     const reset = () => {

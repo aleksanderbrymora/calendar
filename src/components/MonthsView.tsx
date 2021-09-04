@@ -84,6 +84,7 @@ const Arrow: FC<ArrowProps> = ({ variant, changeMonth, disabled }) => {
       {...pressProps}
       tabIndex={disabled ? -1 : 1}
       aria-disabled={disabled}
+      disabled={disabled}
       data-cy={`${variant === 'left' ? 'previous' : 'next'}-month-button`}
       aria-label={`Move ${
         variant === 'left' ? 'back' : 'forward'
