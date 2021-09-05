@@ -1,7 +1,7 @@
 import { ButtonAria } from '@react-aria/button';
 import { usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
-import { FC, RefObject } from 'react';
+import React, { FC, RefObject } from 'react';
 import 'twin.macro';
 import { useCalendar } from '../store';
 

@@ -1,7 +1,7 @@
 import { useHover, usePress } from '@react-aria/interactions';
 import { observer } from 'mobx-react-lite';
 import { Instance } from 'mobx-state-tree';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import tw from 'twin.macro';
 import { Day as DayOfWeek } from '../store/Day';
 import { StatusVariant } from '../store/types';

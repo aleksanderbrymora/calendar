@@ -1,3 +1,4 @@
+import React from 'react';
 import { OverlayProvider } from '@react-aria/overlays';
 import 'twin.macro';
 import Calendar from './components/Calendar';

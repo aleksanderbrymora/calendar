@@ -7,7 +7,7 @@ import {
   usePreventScroll,
 } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import tw, { css } from 'twin.macro';
 import BottomControls from './BottomControls';
 import MonthsView from './MonthsView';
