@@ -1,10 +1,8 @@
 import {
   addMonths,
-  differenceInDays,
-  differenceInMonths,
-  format,
+  differenceInDays, format,
   isAfter,
-  isBefore,
+  isBefore
 } from 'date-fns';
 import isSameDay from 'date-fns/isSameDay';
 import { types } from 'mobx-state-tree';
